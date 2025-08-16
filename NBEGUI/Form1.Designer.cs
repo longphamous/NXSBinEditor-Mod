@@ -36,6 +36,8 @@ namespace NBEGUI {
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importCsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importTxtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStrip1.SuspendLayout();
@@ -70,7 +72,9 @@ namespace NBEGUI {
             this.appendMultipleToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.exportListToolStripMenuItem,
-            this.exportCsvToolStripMenuItem
+            this.exportCsvToolStripMenuItem,
+            this.importTxtToolStripMenuItem,
+            this.importCsvToolStripMenuItem
             });
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(104, 48);
@@ -100,7 +104,7 @@ namespace NBEGUI {
             // 
             this.exportListToolStripMenuItem.Name = "exportListToolStripMenuItem";
             this.exportListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exportListToolStripMenuItem.Text = "Export List";
+            this.exportListToolStripMenuItem.Text = "Export TXT";
             this.exportListToolStripMenuItem.Click += new System.EventHandler(this.ExportList_Click);
             // 
             // exportCsvToolStripMenuItem
@@ -108,7 +112,21 @@ namespace NBEGUI {
             this.exportCsvToolStripMenuItem.Name = "exportListToolStripMenuItem";
             this.exportCsvToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exportCsvToolStripMenuItem.Text = "Export to CSV";
-            exportCsvToolStripMenuItem.Click += new EventHandler(this.ExportCsv_Click);
+            this.exportCsvToolStripMenuItem.Click += new EventHandler(this.ExportCsv_Click);
+            // 
+            // importCsvToolStripMenuItem
+            // 
+            this.importCsvToolStripMenuItem.Name = "importCsvToolStripMenuItem";
+            this.importCsvToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.importCsvToolStripMenuItem.Text = "Import CSV";
+            this.importCsvToolStripMenuItem.Click += new EventHandler(this.ImportCsv_Click);
+            // 
+            // importTxtToolStripMenuItem
+            // 
+            this.importTxtToolStripMenuItem.Name = "importTxtToolStripMenuItem";
+            this.importTxtToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.importTxtToolStripMenuItem.Text = "Import TXT";
+            this.importTxtToolStripMenuItem.Click += new EventHandler(this.ImportTxt_Click);
             // 
             // openFileDialog1
             // 
@@ -146,6 +164,8 @@ namespace NBEGUI {
         private System.Windows.Forms.ToolStripMenuItem exportListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportCsvToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem appendMultipleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importCsvToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importTxtToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private List<string> fileNamesPerLine = new List<string>();

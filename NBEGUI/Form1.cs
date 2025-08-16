@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace NBEGUI {
@@ -110,6 +111,145 @@ namespace NBEGUI {
                     }
                 }
             }
+        }
+
+        private void ImportTxt_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog importDialog = new OpenFileDialog())
+            {
+                importDialog.Filter = "Text files (*.txt)|*.txt";
+                importDialog.Multiselect = false;
+                if (importDialog.ShowDialog() == DialogResult.OK)
+                {
+                    List<string> txtLines = new List<string>();
+                    using (StreamReader reader = new StreamReader(importDialog.FileName))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            txtLines.Add(line);
+                        }
+                    }
+
+                    // Check if the number of lines matches
+                    if (txtLines.Count != listBox1.Items.Count)
+                    {
+                        MessageBox.Show($"The number of lines in the TXT file ({txtLines.Count}) does not match the number of entries in the ListBox ({listBox1.Items.Count}). Import aborted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Import lines from TXT if not empty
+                    for (int i = 0; i < listBox1.Items.Count; i++)
+                    {
+                        string txtLine = txtLines[i];
+                        if (!string.IsNullOrWhiteSpace(txtLine))
+                        {
+                            listBox1.Items[i] = txtLine;
+                        }
+                    }
+
+                    // Update the TextBox if an item is selected
+                    if (listBox1.SelectedIndex >= 0)
+                    {
+                        textBox1.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
+                    }
+
+                    MessageBox.Show("Import completed.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void ImportCsv_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog importDialog = new OpenFileDialog())
+            {
+                importDialog.Filter = "CSV files (*.csv)|*.csv";
+                importDialog.Multiselect = false;
+                if (importDialog.ShowDialog() == DialogResult.OK)
+                {
+                    List<string> enUsValues = new List<string>();
+                    bool isHeaderSkipped = false;
+                    using (StreamReader reader = new StreamReader(importDialog.FileName))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (!isHeaderSkipped)
+                            {
+                                isHeaderSkipped = true;
+                                continue; 
+                            }
+
+                            string[] parts = ParseCsvLine(line);
+                            if (parts.Length >= 3)
+                            {
+                                string en_US = parts[1].Trim('"');
+                                enUsValues.Add(en_US);
+                            }
+                        }
+                    }
+
+                    if (enUsValues.Count != listBox1.Items.Count)
+                    {
+                        MessageBox.Show($"The number of lines in the CSV file ({enUsValues.Count}) does not match the number of entries in the ListBox ({listBox1.Items.Count}). Import canceled.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    for (int i = 0; i < listBox1.Items.Count; i++)
+                    {
+                        string en_US = enUsValues[i];
+                        if (!string.IsNullOrWhiteSpace(en_US))
+                        {
+                            listBox1.Items[i] = en_US;
+                        }
+                    }
+
+                    if (listBox1.SelectedIndex >= 0)
+                    {
+                        textBox1.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
+                    }
+
+                    MessageBox.Show("Import completed.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private string[] ParseCsvLine(string line)
+        {
+            List<string> parts = new List<string>();
+            bool inQuotes = false;
+            string currentPart = "";
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+                if (c == '"' && !inQuotes)
+                {
+                    inQuotes = true;
+                }
+                else if (c == '"' && inQuotes)
+                {
+                    if (i + 1 < line.Length && line[i + 1] == '"')
+                    {
+                        currentPart += '"';
+                        i++;
+                    }
+                    else
+                    {
+                        inQuotes = false;
+                    }
+                }
+                else if (c == '|' && !inQuotes)
+                {
+                    parts.Add(currentPart);
+                    currentPart = "";
+                }
+                else
+                {
+                    currentPart += c;
+                }
+            }
+            parts.Add(currentPart);
+            return parts.ToArray();
         }
     }
 }
