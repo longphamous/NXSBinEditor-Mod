@@ -26,6 +26,15 @@ namespace NBEGUI {
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e) {
+            isAppending = false;
+            openFileDialog1.Multiselect = true;
+            openFileDialog1.ShowDialog();
+        }
+
+        private void AppendMultiple_Click(object sender, EventArgs e)
+        {
+            isAppending = true;
+            openFileDialog1.Multiselect = true;
             openFileDialog1.ShowDialog();
         }
 
@@ -35,11 +44,20 @@ namespace NBEGUI {
 
         BinHelper Editor;
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e) {
-            Editor = new BinHelper(File.ReadAllBytes(openFileDialog1.FileName));
+            if (!isAppending)
+            {
+                listBox1.Items.Clear();
+                fileNamesPerLine.Clear();
+            }
 
-            listBox1.Items.Clear();
-            foreach (string str in Editor.Import()) {
-                listBox1.Items.Add(str);
+            foreach (string file in openFileDialog1.FileNames)
+            {
+                Editor = new BinHelper(File.ReadAllBytes(file));
+                foreach (string str in Editor.Import())
+                {
+                    listBox1.Items.Add(str);
+                    fileNamesPerLine.Add(Path.GetFileName(file));
+                }
             }
         }
 
@@ -51,6 +69,47 @@ namespace NBEGUI {
             File.WriteAllBytes(saveFileDialog1.FileName, Editor.Export(Rst.ToArray()));
 
             MessageBox.Show("Saved");
+        }
+
+        private void ExportList_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveDialog = new SaveFileDialog())
+            {
+                saveDialog.Filter = "Text files (*.txt)|*.txt";
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    using (StreamWriter writer = new StreamWriter(saveDialog.FileName))
+                    {
+                        foreach (var item in listBox1.Items)
+                        {
+                            writer.WriteLine(item.ToString());
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ExportCsv_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveDialog = new SaveFileDialog())
+            {
+                saveDialog.Filter = "CSV files (*.csv)|*.csv";
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    using (StreamWriter writer = new StreamWriter(saveDialog.FileName))
+                    {
+                        writer.WriteLine("ja_JP|en_US|comment");
+
+                        for (int i = 0; i < listBox1.Items.Count; i++)
+                        {
+                            string ja_JP = $"\"{listBox1.Items[i].ToString().Replace("\"", "\"\"")}\"";
+                            string en_US = "\"\"";
+                            string comment = (i < fileNamesPerLine.Count) ? $"\"{fileNamesPerLine[i].Replace("\"", "\"\"")}\"" : "\"\"";
+                            writer.WriteLine($"{ja_JP}|{en_US}|{comment}");
+                        }
+                    }
+                }
+            }
         }
     }
 }

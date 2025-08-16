@@ -1,4 +1,8 @@
-﻿namespace NBEGUI {
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+
+namespace NBEGUI {
     partial class NBEGUI {
         /// <summary>
         /// Variável de designer necessária.
@@ -28,7 +32,10 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.appendMultipleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportCsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStrip1.SuspendLayout();
@@ -60,7 +67,11 @@
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
-            this.saveToolStripMenuItem});
+            this.appendMultipleToolStripMenuItem,
+            this.saveToolStripMenuItem,
+            this.exportListToolStripMenuItem,
+            this.exportCsvToolStripMenuItem
+            });
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(104, 48);
             // 
@@ -71,12 +82,33 @@
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
+            // appendMultipleToolStripMenuItem
+            // 
+            this.appendMultipleToolStripMenuItem.Name = "appendMultipleToolStripMenuItem";
+            this.appendMultipleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.appendMultipleToolStripMenuItem.Text = "Append Multiple";
+            this.appendMultipleToolStripMenuItem.Click += new System.EventHandler(this.AppendMultiple_Click);
+            // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportListToolStripMenuItem.Name = "exportListToolStripMenuItem";
+            this.exportListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exportListToolStripMenuItem.Text = "Export List";
+            this.exportListToolStripMenuItem.Click += new System.EventHandler(this.ExportList_Click);
+            // 
+            // exportCsvToolStripMenuItem
+            //
+            this.exportCsvToolStripMenuItem.Name = "exportListToolStripMenuItem";
+            this.exportCsvToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exportCsvToolStripMenuItem.Text = "Export to CSV";
+            exportCsvToolStripMenuItem.Click += new EventHandler(this.ExportCsv_Click);
             // 
             // openFileDialog1
             // 
@@ -111,8 +143,14 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportCsvToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem appendMultipleToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private List<string> fileNamesPerLine = new List<string>();
+        private string currentFileName;
+        private bool isAppending = false;
     }
 }
 
